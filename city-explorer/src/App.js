@@ -14,7 +14,8 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      display:'hide'
+      display:'hide',
+      Data: []
     }
   }
   locationSearch = (content) => {
@@ -28,6 +29,22 @@ class App extends React.Component {
         searchInput: content,
         locationData: results.body,
       });
+      let APIrequests = ['weather', 'trails', 'meetups', 'movies', 'yelp'];
+      let allPromises = [];
+      APIrequests.forEach((api) => {
+        console.log(`https://city-explorer-backend.herokuapp.com/${api}`);
+        let promise = superagent.get(`https://city-explorer-backend.herokuapp.com/${api}`).query({data: this.state.locationData});
+        allPromises.push(promise);
+        });
+      Promise.all(allPromises)
+      .then(results => {
+        let outcome = [];
+        results.forEach((res) => {
+          outcome.push(res.body);
+        })
+        this.setState({Data: outcome});
+        console.log(this.state);
+      })
     })
     .catch(err => {
       console.log(err);
@@ -36,13 +53,14 @@ class App extends React.Component {
 
 
   render() {
+    console.log('APIHAndle data', this.state.Data)
     return (
       <React.Fragment>
         <Header/>
         <URLform/>
         <SearchForm searchHandler={this.locationSearch}/>
         <Map display={this.state.display} searchInput={this.state.searchInput} locationData={this.state.locationData}/>
-        <APIHandler display={this.state.display} locationData={this.state.locationData}/>
+        <APIHandler display={this.state.display} data={this.state.Data}/>
       </React.Fragment>
     );
   }
