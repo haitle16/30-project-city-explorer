@@ -6,19 +6,19 @@ class DARKSKYapi extends React.Component {
     this.state = {}
   }
   render(){
-    console.log('TESTING PROPS',this.props.fetchData('weather'));
+    // console.log('TESTING PROPS',this.props.fetchData);
     return (
       <section>
         <h3>Results from the Dark Sky API</h3>
         <ul>
-      {/* {this.props.fetchData('weather').map((day) => {
-        console.log(day.time, day.forcast);
+      {this.props.data &&
+        this.props.data.map((day) => {
         return (
           <li>
-            The forcast for {day.time} is: {day.forcast}
+            The forcast for {day.time} is: {day.forecast}
           </li>
         );
-      })} */}
+      })}
     </ul>
       </section>
     );
